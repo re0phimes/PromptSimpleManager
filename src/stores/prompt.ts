@@ -120,21 +120,10 @@ export const usePromptStore = defineStore('prompt', {
       if (!activeConversation) return ''
 
       let prompt = ''
-      
-      // Only include role and style if they have content
-      const roleVariable = activeConversation.variables.find(v => v.key === 'role')
-      const styleVariable = activeConversation.variables.find(v => v.key === 'style')
-      
-      if (roleVariable?.value) {
-        prompt += `${roleVariable.key}: ${roleVariable.value}\n`
-      }
-      if (styleVariable?.value) {
-        prompt += `${styleVariable.key}: ${styleVariable.value}\n`
-      }
-      
-      // Include other variables
+
+      // Include all non-empty variables
       activeConversation.variables.forEach(variable => {
-        if (variable.key !== 'role' && variable.key !== 'style') {
+        if (variable.value !== '') {
           prompt += `${variable.key}: ${variable.value}\n`
         }
       })
@@ -143,11 +132,13 @@ export const usePromptStore = defineStore('prompt', {
         prompt += `\nInstruction: ${activeConversation.instruction}\n`
       }
       if (activeConversation.inputContent) {
-        prompt += `\nInput Content:\n\`\`\`${activeConversation.inputContent}\`\`\`\n`
+        prompt += `\nInput Content:\n\`\`\`\n${activeConversation.inputContent}\n\`\`\`\n`
       }
 
-      return prompt
+      return prompt.trim()
     }
+
+
   }
 })
 
