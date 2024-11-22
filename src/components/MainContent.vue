@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col lg:flex-row gap-6 h-full w-full max-w-full">
+  <div class="flex flex-col lg:flex-row gap-6 h-full w-full">
     <!-- Left Column -->
-    <div class="flex-1 space-y-6 min-w-[300px]">
+    <div class="w-full lg:w-1/2 space-y-6">
       <!-- Basic Prompt -->
       <div class="space-y-2 w-full">
         <label class="block text-sm font-medium">基本 prompt</label>
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Right Column -->
-    <div class="flex-1 border border-gray-700 rounded-lg min-w-[300px] h-full">
+    <div class="w-full lg:w-1/2 border border-gray-700 rounded-lg h-full">
       <div class="border-b border-gray-700 p-4 flex justify-between items-center">
         <div class="flex space-x-2">
           <button
@@ -64,7 +64,7 @@
           复制
         </button>
       </div>
-      <div class="p-4 h-[calc(100%-4rem)] overflow-auto">
+      <div class="p-4 h-[calc(100%-4rem)] overflow-auto w-full">
         <pre class="whitespace-pre-wrap">{{ store.output }}</pre>
       </div>
     </div>
