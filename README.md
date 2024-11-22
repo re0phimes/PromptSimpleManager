@@ -1,11 +1,9 @@
-# Vue 3 + TypeScript + Vite + Tailwind css
+# Prompt管理工具
 
-## 一个基础开发仓库
+## 介绍
 
-- 包含了 Vue3, TS, Vite, Tailwind css，支持容器创建。
-- 包含了.vscode下的默认devcontianer.json
-- 删除了vite创建后`style.css`中对#app容器的大小限制
-- 在`App.vue`中国增加了一个基础左右导航的布局。
+一个支持模板填充，修改，格式转换，保存，分享的prompt管理工具。
+
 
 
 ## 项目结构
