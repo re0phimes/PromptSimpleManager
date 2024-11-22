@@ -102,6 +102,12 @@ export const usePromptStore = defineStore('prompt', {
 
     setOutputFormat(format: 'text' | 'json' | 'yaml') {
       this.outputFormat = format
+    },
+
+    initializeStore() {
+      if (this.conversations.length === 0) {
+        this.addConversation()
+      }
     }
   },
 
@@ -114,16 +120,34 @@ export const usePromptStore = defineStore('prompt', {
       if (!activeConversation) return ''
 
       let prompt = ''
+      
+      // Only include role and style if they have content
+      const roleVariable = activeConversation.variables.find(v => v.key === 'role')
+      const styleVariable = activeConversation.variables.find(v => v.key === 'style')
+      
+      if (roleVariable?.value) {
+        prompt += `${roleVariable.key}: ${roleVariable.value}\n`
+      }
+      if (styleVariable?.value) {
+        prompt += `${styleVariable.key}: ${styleVariable.value}\n`
+      }
+      
+      // Include other variables
       activeConversation.variables.forEach(variable => {
-        prompt += `${variable.key}: ${variable.value}\n`
+        if (variable.key !== 'role' && variable.key !== 'style') {
+          prompt += `${variable.key}: ${variable.value}\n`
+        }
       })
-      prompt += `\nInstruction: ${activeConversation.instruction}\n`
+
+      if (activeConversation.instruction) {
+        prompt += `\nInstruction: ${activeConversation.instruction}\n`
+      }
       if (activeConversation.inputContent) {
         prompt += `\nInput Content:\n\`\`\`${activeConversation.inputContent}\`\`\`\n`
       }
 
-      
       return prompt
     }
   }
 })
+

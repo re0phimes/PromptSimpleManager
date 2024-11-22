@@ -14,6 +14,17 @@
 import Sidebar from './components/Sidebar.vue'
 import Header from './components/Header.vue'
 import MainContent from './components/MainContent.vue'
+
+import { onMounted } from 'vue'
+import { usePromptStore } from './stores/prompt'
+
+
+const store = usePromptStore()
+
+onMounted(() => {
+  store.initializeStore()
+})
+
 </script>
 
 <style>
