@@ -1,18 +1,19 @@
 <template>
-  <div class="grid grid-cols-2 gap-6 h-full">
-    <div class="space-y-6">
+  <div class="flex flex-col lg:flex-row gap-6 h-full w-full max-w-full">
+    <!-- Left Column -->
+    <div class="flex-1 space-y-6 min-w-[300px]">
       <!-- Basic Prompt -->
-      <div class="space-y-2">
+      <div class="space-y-2 w-full">
         <label class="block text-sm font-medium">基本 prompt</label>
         <textarea
           v-model="store.basicPrompt"
-          class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-white"
+          class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-white resize-none"
           placeholder="输入基本 prompt..."
         />
       </div>
 
       <!-- Variables -->
-      <div class="space-y-2">
+      <div class="space-y-2 w-full">
         <label class="block text-sm font-medium">变量</label>
         <div v-for="(variable, index) in store.variables" :key="index" class="flex gap-2">
           <input
@@ -35,18 +36,18 @@
       </div>
 
       <!-- Output Requirements -->
-      <div class="space-y-2">
+      <div class="space-y-2 w-full">
         <label class="block text-sm font-medium">输出要求</label>
         <textarea
           v-model="store.outputRequirement"
-          class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3"
+          class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 resize-none"
           placeholder="输入输出要求..."
         />
       </div>
     </div>
 
-    <!-- Output Section -->
-    <div class="border border-gray-700 rounded-lg h-full">
+    <!-- Right Column -->
+    <div class="flex-1 border border-gray-700 rounded-lg min-w-[300px] h-full">
       <div class="border-b border-gray-700 p-4 flex justify-between items-center">
         <div class="flex space-x-2">
           <button
@@ -63,7 +64,7 @@
           复制
         </button>
       </div>
-      <div class="p-4 h-full overflow-auto">
+      <div class="p-4 h-[calc(100%-4rem)] overflow-auto">
         <pre class="whitespace-pre-wrap">{{ store.output }}</pre>
       </div>
     </div>
@@ -79,4 +80,11 @@ const addVariable = () => {
   store.addVariable('', '')
 }
 </script>
+
+<style scoped>
+textarea, input {
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>
 
