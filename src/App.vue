@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full bg-[#0d1117] text-white">
+  <div class="flex h-full">
     <Sidebar />
     <main class="flex-1 flex flex-col">
       <Header />
