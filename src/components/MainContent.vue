@@ -7,7 +7,7 @@
         <div class="space-y-2 w-full">
           <label class="block text-sm font-medium">变量</label>
           <div v-for="(variable, index) in activeConversation.variables" :key="index" class="flex gap-2">
-            <Input :value="variable.key" class="flex-1 bg-gray-800 border border-gray-700 rounded p-2" placeholder="变量名"
+            <input :value="variable.key" class="flex-1 bg-gray-800 border border-gray-700 rounded p-2" placeholder="变量名"
               @input="updateVariableKey(index, $event.target.value)" />
             <input :value="variable.value" class="flex-1 bg-gray-800 border border-gray-700 rounded p-2"
               placeholder="变量值" @input="updateVariableValue(index, $event.target.value)" />
@@ -50,7 +50,7 @@
               {{ format }}
             </button>
           </div>
-          <Button variant="outline" class="rounded" @click="copyToClipboard">复制</Button>
+          <Button class="rounded" @click="copyToClipboard">复制</Button>
 
         </div>
         <div class="p-4 h-[calc(100%-4rem)] overflow-auto w-full">
