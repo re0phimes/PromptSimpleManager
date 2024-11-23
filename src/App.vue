@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full bg-gray-900 text-white">
+  <div class="flex h-full bg-[#0d1117] text-white">
     <Sidebar />
     <main class="flex-1 flex flex-col">
       <Header />
@@ -14,6 +14,9 @@
 import Sidebar from './components/Sidebar.vue'
 import Header from './components/Header.vue'
 import MainContent from './components/MainContent.vue'
+
+// import { Sidebar } from '@/components/ui/sidebar'
+
 
 import { onMounted } from 'vue'
 import { usePromptStore } from './stores/prompt'
