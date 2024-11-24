@@ -14,7 +14,7 @@ export default defineConfig({
     },
   },
   define: {
-    title: "Prompt Manager - 老狗助手"
+    "title": "Prompt Manager - 老狗助手"
   },
   plugins: [
     vue(),
