@@ -28,14 +28,19 @@
         <div class="space-y-2 w-full">
           <label class="block text-sm font-medium">Instruction</label>
           <textarea :value="activeConversation.instruction" @input="updateInstruction($event.target.value)"
-            class="w-full h-32 border border-inherit rounded-lg p-3 text-white resize-none" placeholder="输入指令..." />
+            class="w-full h-32 border border-inherit rounded-lg p-3 resize-none" placeholder="输入指令..." />
+
+
+
+
+
         </div>
 
         <!-- Input Content -->
         <div class="space-y-2 w-full">
           <label class="block text-sm font-medium">Input Content</label>
           <textarea :value="activeConversation.inputContent" @input="updateInputContent($event.target.value)"
-            class="w-full h-32 border border-slate-300 rounded-lg p-3 text-white resize-none" placeholder="输入内容..." />
+            class="w-full h-32 border border-slate-300 rounded-lg p-3 resize-none" placeholder="输入内容..." />
         </div>
       </div>
 

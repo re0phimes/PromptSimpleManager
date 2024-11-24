@@ -21,7 +21,11 @@ import MainContent from './components/MainContent.vue'
 
 import { onMounted } from 'vue'
 import { usePromptStore } from './stores/prompt'
+import { useHead } from '@vueuse/head'
 
+useHead({
+  title: 'Your New Project Name',
+})
 
 const store = usePromptStore()
 

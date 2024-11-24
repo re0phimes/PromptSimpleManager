@@ -13,9 +13,7 @@ export default defineConfig({
       plugins: [tailwind(), autoprefixer()],
     },
   },
-  // define: {
-  //   "title": "Prompt Manager - 老狗助手"
-  // },
+
   plugins: [
     vue(),
   ],
