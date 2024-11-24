@@ -7,8 +7,8 @@
         <div class="space-y-2 w-full">
           <label class="block text-sm font-medium">变量</label>
           <div v-for="(variable, index) in activeConversation.variables" :key="index" class="flex gap-4">
-            <input :value="variable.key" class="flex-1 w-full md:w=1/3 border border-slate-300 rounded p-2" placeholder="变量名"
-              @input="updateVariableKey(index, $event.target.value)" />
+            <input :value="variable.key" class="flex-1 w-full md:w=1/3 border border-slate-300 rounded p-2"
+              placeholder="变量名" @input="updateVariableKey(index, $event.target.value)" />
             <input :value="variable.value" class="flex-1 w-full md:w=2/3 border border-slate-300 rounded p-2"
               placeholder="变量值" @input="updateVariableValue(index, $event.target.value)" />
             <Button v-if="index > 1" @click="store.removeVariable(index)" class="p-2 hover:text-white">
@@ -28,35 +28,39 @@
         <div class="space-y-2 w-full">
           <label class="block text-sm font-medium">Instruction</label>
           <textarea :value="activeConversation.instruction" @input="updateInstruction($event.target.value)"
-            class="w-full h-32 border border-inherit rounded-lg p-3 text-white resize-none"
-            placeholder="输入指令..." />
+            class="w-full h-32 border border-inherit rounded-lg p-3 text-white resize-none" placeholder="输入指令..." />
         </div>
 
         <!-- Input Content -->
         <div class="space-y-2 w-full">
           <label class="block text-sm font-medium">Input Content</label>
           <textarea :value="activeConversation.inputContent" @input="updateInputContent($event.target.value)"
-            class="w-full h-32 border border-slate-300 rounded-lg p-3 text-white resize-none"
-            placeholder="输入内容..." />
+            class="w-full h-32 border border-slate-300 rounded-lg p-3 text-white resize-none" placeholder="输入内容..." />
         </div>
       </div>
 
       <!-- Right Column -->
-      <div class="w-full lg:w-1/2 border border-slate-300 rounded-lg h-full">
-        <div class="border-b border-slate-300 p-4 flex justify-between items-center">
-          <div class="flex space-x-2">
-            <button v-for="format in ['text', 'json', 'yaml']" :key="format" @click="convertAndSetFormat(format)"
-              class="px-3 py-1 rounded" :class="store.outputFormat === format ? 'bg-gray-white' : 'hover:bg-indigo-300'">
-              {{ format }}
-            </button>
-          </div>
-          <Button class="rounded" @click="copyToClipboard">复制</Button>
+      <div class="flex-1">
+        <label class="block text-sm font-medium">输出</label>
 
-        </div>
-        <div class="p-4 h-[calc(100%-4rem)] overflow-auto w-full">
-          <pre class="whitespace-pre-wrap">{{ convertedPrompt }}</pre>
+        <div class="w-full mt-2 border border-slate-300 rounded-lg h-full">
+          <div class="border-b border-slate-300 p-2 flex justify-between items-center">
+            <div class="flex space-x-2">
+              <button v-for="format in ['text', 'json', 'yaml']" :key="format" @click="convertAndSetFormat(format)"
+                class="px-3 py-1 rounded"
+                :class="store.outputFormat === format ? 'bg-gray-white' : 'hover:bg-indigo-300'">
+                {{ format }}
+              </button>
+            </div>
+            <Button class="rounded" @click="copyToClipboard">复制</Button>
+
+          </div>
+          <div class="p-4 h-[calc(100%-4rem)] overflow-auto w-full">
+            <pre class="whitespace-pre-wrap">{{ convertedPrompt }}</pre>
+          </div>
         </div>
       </div>
+
     </template>
     <template v-else>
       <div class="w-full h-full flex items-center justify-center">
@@ -143,4 +147,3 @@ input {
   box-sizing: border-box;
 }
 </style>
-
