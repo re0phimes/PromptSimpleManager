@@ -107,8 +107,8 @@ const convertedPrompt = computed(() => {
   const baseStructure: BasePromptStructure = {
     variables: Object.fromEntries(
       activeConversation.value.variables
-        .filter(v => v.value !== '')
-        .map(v => [v.key, v.value])
+        .filter(v => v.value.trim() !== '')
+        .map(v => [v.key, v.value.trim()])
     ),
     instruction: activeConversation.value.instruction,
     inputContent: activeConversation.value.inputContent || undefined

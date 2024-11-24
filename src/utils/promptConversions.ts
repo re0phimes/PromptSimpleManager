@@ -45,10 +45,21 @@ export function convertPromptStructure(prompt: PromptStructure, targetFormat: 't
 
 export function serializePromptStructure(prompt: PromptStructure): string {
   switch (prompt.format) {
-    case 'text':
-      return Object.entries(prompt.variables).map(([key, value]) => `${key}: ${value}`).join('\n') +
-        `\n\nInstruction: ${prompt.instruction}` +
-        (prompt.inputContent ? `\n\nInput Content:\n\`\`\`\n${prompt.inputContent}\n\`\`\`\n` : '');
+    case 'text': {
+      const parts = [
+        // 只有当variables不为空时才添加
+        Object.entries(prompt.variables).length > 0
+          ? Object.entries(prompt.variables).map(([key, value]) => `${key}: ${value}`).join('\n')
+          : null,
+        `Instruction: ${prompt.instruction}`,
+        // 只有当inputContent存在时才添加
+        prompt.inputContent
+          ? `Input Content:\n\`\`\`\n${prompt.inputContent}\n\`\`\`\n`
+          : null
+      ].filter(Boolean); // 过滤掉null值
+
+      return parts.join('\n\n');
+    }
     case 'json':
       return JSON.stringify(prompt, null, 2);
     case 'yaml':
