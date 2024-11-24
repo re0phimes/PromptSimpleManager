@@ -4,7 +4,7 @@
     <main class="flex-1 flex flex-col">
       <Header />
 
-      <div class="flex-1 overflow-auto p-6 w-full">
+      <div class="flex-1 overflow-auto p-6 w-full bg-white dark:bg-gray-900">
         <MainContent />
       </div>
     </main>
@@ -19,9 +19,11 @@ import MainContent from './components/MainContent.vue'
 // import { Sidebar } from '@/components/ui/sidebar'
 
 
-import { onMounted } from 'vue'
+import { onMounted, watchEffect } from 'vue'
 import { usePromptStore } from './stores/prompt'
 import { useHead } from '@vueuse/head'
+
+
 
 useHead({
   title: 'Your New Project Name',
