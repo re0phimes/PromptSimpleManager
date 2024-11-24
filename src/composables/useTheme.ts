@@ -20,7 +20,7 @@ export function useTheme() {
 
   onMounted(() => {
     isDark.value =
-      localStorage.theme === 'dark' ||
+      localStorage.theme === 'light' ||
       (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
     updateTheme()
   })

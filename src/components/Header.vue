@@ -5,7 +5,7 @@
     </div>
     <div class="flex items-center space-x-4">
       <ThemeSwitcher />
-      <button class="rounded border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+      <button class="px-4 rounded border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
         保存
       </button>
     </div>
