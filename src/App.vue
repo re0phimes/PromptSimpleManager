@@ -1,38 +1,31 @@
 <template>
-  <div class="flex h-full">
-    <Sidebar />
-    <main class="flex-1 flex flex-col">
-      <Header />
-
-      <div class="flex-1 overflow-auto p-6 w-full bg-white dark:bg-gray-900">
-        <MainContent />
-      </div>
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <TopNavigation />
+    <main>
+      <router-view />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import Sidebar from './components/Sidebar.vue'
-import Header from './components/Header.vue'
-import MainContent from './components/MainContent.vue'
-
-// import { Sidebar } from '@/components/ui/sidebar'
-
-
-import { onMounted, watchEffect } from 'vue'
+import TopNavigation from './components/TopNavigation.vue'
+import { onMounted } from 'vue'
 import { usePromptStore } from './stores/prompt'
+import { useAuthStore } from './stores/auth'
 import { useHead } from '@vueuse/head'
 
-
-
 useHead({
-  title: 'Your New Project Name',
+  title: 'Prompt Manager',
 })
 
-const store = usePromptStore()
+const promptStore = usePromptStore()
+const authStore = useAuthStore()
 
-onMounted(() => {
-  store.initializeStore()
+onMounted(async () => {
+  // 首先初始化认证
+  await authStore.initialize()
+  // 然后初始化提示词store
+  await promptStore.initializeStore()
 })
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col lg:flex-row gap-6 h-full w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <div class="flex flex-col lg:flex-row gap-6 h-full w-full p-6 text-gray-900 dark:text-gray-100">
     <template v-if="activeConversation">
       <!-- Left Column -->
       <div class="w-full lg:w-1/2 space-y-6">
@@ -75,8 +75,6 @@ import { convertPromptStructure, serializePromptStructure, PromptStructure } fro
 import { BasePromptStructure } from '../models/promptStructures'
 // shadcn ui
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import ThemeSwitcher from './ThemeSwitcher.vue'
 
 const store = usePromptStore()
 const activeConversation = computed(() => store.getActiveConversation)
