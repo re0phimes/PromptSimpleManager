@@ -2,9 +2,14 @@
   <div class="p-6">
     <!-- 标题和收藏 -->
     <div class="flex justify-between items-start mb-3">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
-        {{ prompt.title }}
-      </h3>
+      <div class="flex-1 min-w-0">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 truncate">
+          {{ prompt.title }}
+        </h3>
+        <span v-if="prompt.version" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 mt-1">
+          v{{ prompt.version }}
+        </span>
+      </div>
       <button
         @click.stop="$emit('toggle-favorite', prompt.id)"
         class="ml-2 text-gray-400 hover:text-yellow-500 transition-colors duration-200"

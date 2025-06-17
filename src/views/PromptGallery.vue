@@ -13,16 +13,16 @@
             </p>
           </div>
           <div class="flex space-x-4">
-            <!-- 关闭预览按钮 -->
+            <!-- 关闭预览/添加按钮 -->
             <button
-              v-if="selectedPrompt"
-              @click="closePreview"
+              v-if="selectedPrompt || showAddPanel"
+              @click="closeAll"
               class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
             >
               <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
-              关闭预览
+              {{ showAddPanel ? '关闭添加' : '关闭预览' }}
             </button>
             
             <!-- 收藏筛选 -->
@@ -39,27 +39,19 @@
               {{ showFavoritesOnly ? '显示全部' : '只显示收藏' }}
             </button>
             
-            <!-- 导入按钮 -->
+            <!-- 添加Prompt按钮 -->
             <button
-              @click="showImportModal = true"
-              class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200"
-            >
-              <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
-              </svg>
-              导入Prompt
-            </button>
-            
-            <!-- 新建按钮 -->
-            <router-link
-              to="/editor"
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+              @click="toggleAddPanel"
+              class="px-4 py-2 rounded-lg transition-colors duration-200"
+              :class="showAddPanel 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-blue-500 text-white hover:bg-blue-600'"
             >
               <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
-              新建Prompt
-            </router-link>
+              {{ showAddPanel ? '关闭添加' : '添加Prompt' }}
+            </button>
           </div>
         </div>
       </div>
@@ -67,6 +59,16 @@
       <!-- 加载状态 -->
       <div v-if="promptStore.loading" class="flex justify-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+
+      <!-- 添加面板（占满整个页面）-->
+      <div v-if="showAddPanel" class="h-[calc(100vh-12rem)]">
+        <AddPromptPanel 
+          :show="showAddPanel"
+          @close="closeAddPanel"
+          @imported="onPromptImported"
+          @created="onPromptCreated"
+        />
       </div>
 
       <!-- 空状态 -->
@@ -80,21 +82,21 @@
         <p class="mt-2 text-gray-500 dark:text-gray-400">
           {{ showFavoritesOnly ? '你还没有收藏任何提示词' : '开始创建你的第一个提示词吧' }}
         </p>
-        <router-link
-          to="/editor"
+        <button
+          @click="toggleAddPanel"
           class="mt-4 inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
         >
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          创建新Prompt
-        </router-link>
+          添加Prompt
+        </button>
       </div>
 
       <!-- 主要内容区域 -->
       <div v-else class="flex gap-6 h-[calc(100vh-12rem)]">
         <!-- 左侧：提示词列表 -->
-        <div :class="selectedPrompt ? 'w-[14.28%]' : 'w-full'">
+        <div :class="getLeftPanelClass()">
           <!-- 网格视图（无选中时）-->
           <div v-if="!selectedPrompt" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <div
@@ -123,9 +125,14 @@
                   <h3 class="font-medium text-gray-900 dark:text-gray-100 truncate">
                     {{ prompt.title }}
                   </h3>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 truncate mt-1">
-                    {{ prompt.instruction || '暂无指令内容' }}
-                  </p>
+                  <div class="flex items-center space-x-2 mt-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                      {{ prompt.instruction || '暂无指令内容' }}
+                    </p>
+                    <span v-if="prompt.version" class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                      v{{ prompt.version }}
+                    </span>
+                  </div>
                   <!-- 变量标签 -->
                   <div v-if="prompt.variables.length > 0" class="flex flex-wrap gap-1 mt-2">
                     <span
@@ -171,34 +178,32 @@
 
         <!-- 右侧：预览区域 -->
         <div v-if="selectedPrompt" class="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-          <PromptPreview :prompt="selectedPrompt" />
+          <PromptPreview :prompt="selectedPrompt" @new-version="onNewVersion" />
         </div>
       </div>
     </div>
     
-    <!-- 导入Prompt弹窗 -->
-    <ImportPromptModal 
-      :show-modal="showImportModal" 
-      @close="showImportModal = false"
-      @imported="onPromptImported"
-    />
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { usePromptStore } from '@/stores/prompt'
 import PromptCard from '@/components/PromptCard.vue'
 import PromptPreview from '@/components/PromptPreview.vue'
-import ImportPromptModal from '@/components/ImportPromptModal.vue'
+import AddPromptPanel from '@/components/AddPromptPanel.vue'
+
 
 const router = useRouter()
+const route = useRoute()
 const promptStore = usePromptStore()
 
 const showFavoritesOnly = ref(false)
 const selectedPrompt = ref<any>(null)
-const showImportModal = ref(false)
+const showAddPanel = ref(false)
+
 
 // 计算过滤后的提示词
 const filteredPrompts = computed(() => {
@@ -210,6 +215,8 @@ const filteredPrompts = computed(() => {
 
 // 选中提示词进行预览
 const selectPrompt = (prompt: any) => {
+  // 关闭添加面板，显示预览
+  showAddPanel.value = false
   selectedPrompt.value = prompt
   promptStore.setActiveConversation(prompt.id)
 }
@@ -219,6 +226,23 @@ const closePreview = () => {
   selectedPrompt.value = null
 }
 
+// 关闭所有面板
+const closeAll = () => {
+  selectedPrompt.value = null
+  showAddPanel.value = false
+}
+
+// 切换添加面板
+const toggleAddPanel = () => {
+  if (showAddPanel.value) {
+    showAddPanel.value = false
+  } else {
+    // 关闭预览，显示添加面板
+    selectedPrompt.value = null
+    showAddPanel.value = true
+  }
+}
+
 // 打开提示词进行编辑
 const openPrompt = (prompt: any) => {
   promptStore.setActiveConversation(prompt.id)
@@ -226,15 +250,42 @@ const openPrompt = (prompt: any) => {
 }
 
 // 切换收藏状态
-const toggleFavorite = async (promptId: string) => {
-  await promptStore.toggleFavorite(promptId)
+const toggleFavorite = (promptId: string) => {
+  promptStore.toggleFavorite(promptId)
 }
 
-// 导入成功后的处理
-const onPromptImported = (importedPrompt: any) => {
-  showImportModal.value = false
-  // 自动选中新导入的prompt进行预览
-  selectedPrompt.value = importedPrompt
+// 获取左侧面板的CSS类
+const getLeftPanelClass = () => {
+  if (selectedPrompt.value) {
+    return 'w-1/3 pr-6 border-r border-gray-200 dark:border-gray-700'
+  }
+  return 'w-full'
+}
+
+// 关闭添加面板
+const closeAddPanel = () => {
+  showAddPanel.value = false
+}
+
+// 处理导入的Prompt
+const onPromptImported = (prompt: any) => {
+  showAddPanel.value = false
+  // 直接将新 prompt 添加到 conversations 列表
+  promptStore.conversations.push(prompt)
+}
+
+// 处理创建的Prompt  
+const onPromptCreated = (prompt: any) => {
+  showAddPanel.value = false
+  // 直接将新 prompt 添加到 conversations 列表
+  promptStore.conversations.push(prompt)
+}
+
+// 处理新版本创建
+const onNewVersion = (newPrompt: any) => {
+  // 新版本已经在PreviewComponent中添加到conversations了
+  // 这里可以做一些额外的处理，比如显示提示
+  console.log('创建了新版本:', newPrompt.title)
 }
 
 // 格式化日期
@@ -252,9 +303,14 @@ const formatDate = (dateString: string) => {
 }
 
 onMounted(() => {
-  // 确保数据已加载
-  if (promptStore.conversations.length === 0) {
-    promptStore.initializeStore()
+  promptStore.initializeStore()
+  
+  // 检查URL参数，如果有import=true，自动打开添加面板
+  if (route.query.import === 'true') {
+    showAddPanel.value = true
+    selectedPrompt.value = null
+    // 清除URL参数，避免刷新时重复打开
+    router.replace('/gallery')
   }
 })
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
       <!-- 编辑器头部 -->
       <div class="mb-6">
         <div class="flex justify-between items-center">
@@ -126,15 +126,20 @@
         </div>
       </div>
     </div>
+    
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import MainContent from '@/components/MainContent.vue'
+
 import { usePromptStore } from '@/stores/prompt'
 import { useAuthStore } from '@/stores/auth'
 
+const router = useRouter()
 const promptStore = usePromptStore()
 const authStore = useAuthStore()
 

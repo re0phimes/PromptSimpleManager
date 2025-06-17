@@ -53,6 +53,24 @@
           {{ error }}
         </div>
         
+        <!-- 登录时显示忘记密码链接 -->
+        <div v-if="isLogin" class="mb-4 text-center">
+          <button
+            type="button"
+            @click="handleForgotPassword"
+            class="text-blue-500 hover:text-blue-600 text-sm underline mr-4"
+          >
+            忘记密码？点击重置
+          </button>
+          <button
+            type="button"
+            @click="checkUserStatus"
+            class="text-green-500 hover:text-green-600 text-sm underline"
+          >
+            检查用户状态
+          </button>
+        </div>
+        
         <div class="flex gap-2">
           <button
             type="submit"
@@ -139,6 +157,50 @@ const handleSubmit = async () => {
     emit('close')
   } catch (err: any) {
     error.value = err.message || '操作失败'
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleForgotPassword = async () => {
+  if (!email.value.trim()) {
+    error.value = '请先输入邮箱地址'
+    return
+  }
+  
+  try {
+    loading.value = true
+    error.value = ''
+    
+    console.log('🔄 发送密码重置邮件到:', email.value)
+    await authStore.resetPassword(email.value)
+    
+    alert('密码重置邮件已发送，请检查您的邮箱！')
+  } catch (err: any) {
+    error.value = err.message || '发送重置邮件失败'
+    console.error('密码重置失败:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+const checkUserStatus = async () => {
+  try {
+    loading.value = true
+    error.value = ''
+    
+    console.log('检查用户状态...')
+    const userStatus = await authStore.checkUserStatus()
+    console.log('用户状态:', userStatus)
+    
+    if (userStatus === 'active') {
+      alert('用户状态正常')
+    } else {
+      alert('用户状态异常')
+    }
+  } catch (err: any) {
+    error.value = err.message || '检查用户状态失败'
+    console.error('检查用户状态失败:', err)
   } finally {
     loading.value = false
   }
